@@ -4,3 +4,6 @@
 [submodule "apps/practice-python-api"]
 	path = apps/practice-python-api
 	url = git@github.com:arunx1/practice-python-api.git
+[submodule "apps/practice-frontend"]
+	path = apps/practice-frontend
+	url = git@github.com:arunx1/practice-frontend.git
