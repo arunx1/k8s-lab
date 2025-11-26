@@ -1,0 +1,50 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wiremock-stubs-ingress
+  namespace: infra
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+  ingressClassName: public
+  rules:
+    - host: ""
+      http:
+        paths:
+          - path: /mock/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: wiremock
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wiremock-admin-ingress
+  namespace: infra
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /__admin/$1
+spec:
+  ingressClassName: public
+  rules:
+    - host: ""
+      http:
+        paths:
+          # Friendly external path
+          - path: /mock-admin/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: wiremock
+                port:
+                  number: 80
+          # Path used in HTML links (/__admin/...)
+          - path: /__admin/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: wiremock
+                port:
+                  number: 80
