@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: wiremock-save-mappings
+  namespace: infra
+spec:
+  schedule: "0 * * * *"  # every hour
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: save-mappings
+              image: curlimages/curl:8.12.1
+              args:
+                - /bin/sh
+                - -c
+                - >
+                  curl -s -X POST
+                  http://wiremock.infra.svc.cluster.local/__admin/mappings/save
+                  || echo "Failed to save mappings"
